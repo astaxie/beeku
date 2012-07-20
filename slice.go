@@ -58,7 +58,7 @@ func Slice_sum(intslice []int64) (sum int64) {
 
 func Slice_filter(slice []interface{}, a filtertype) (ftslice []interface{}) {
 	for _, v := range slice {
-		if t := a(v); t {
+		if a(v) {
 			ftslice = append(ftslice, v)
 		}
 	}
@@ -67,7 +67,7 @@ func Slice_filter(slice []interface{}, a filtertype) (ftslice []interface{}) {
 
 func Slice_diff(slice1, slice2 []interface{}) (diffslice []interface{}) {
 	for _, v := range slice1 {
-		if isin := In_slice(v, slice2); !isin {
+		if !In_slice(v, slice2) {
 			diffslice = append(diffslice, v)
 		}
 	}
@@ -76,7 +76,7 @@ func Slice_diff(slice1, slice2 []interface{}) (diffslice []interface{}) {
 
 func Slice_intersect(slice1, slice2 []interface{}) (diffslice []interface{}) {
 	for _, v := range slice1 {
-		if isin := In_slice(v, slice2); isin {
+		if !In_slice(v, slice2) {
 			diffslice = append(diffslice, v)
 		}
 	}
@@ -84,13 +84,12 @@ func Slice_intersect(slice1, slice2 []interface{}) (diffslice []interface{}) {
 }
 
 func Slice_chunk(slice []interface{}, size int) (chunkslice [][]interface{}) {
-	if size <= len(slice) {
+	if size >= len(slice) {
 		chunkslice = append(chunkslice, slice)
 		return
 	}
-	var end int
+	end := size
 	for i := 0; i <= (len(slice) - size); i += size {
-		end = size
 		chunkslice = append(chunkslice, slice[i:end])
 		end += size
 	}
@@ -116,7 +115,7 @@ func Slice_pad(slice []interface{}, size int, val interface{}) []interface{} {
 
 func Slice_unique(slice []interface{}) (uniqueslice []interface{}) {
 	for _, v := range slice {
-		if isin := In_slice(v, uniqueslice); !isin {
+		if !In_slice(v, uniqueslice) {
 			uniqueslice = append(uniqueslice, v)
 		}
 	}
